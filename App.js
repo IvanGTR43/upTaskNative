@@ -7,6 +7,10 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import CrearCuenta from './src/views/CrearCuenta';
 import Login from './src/views/Login';
+import Proyectos from './src/views/Proyectos';
+import NuevoProyecto from './src/views/NuevoProyecto';
+import Proyecto from './src/views/Proyecto';
+import {convertRemToAbsolute} from 'native-base/lib/typescript/theme/tools';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -33,6 +37,48 @@ const App = () => {
                   fontWeight: 'bold',
                 },
               }}
+            />
+            <Stack.Screen
+              name="proyectos"
+              component={Proyectos}
+              options={{
+                title: 'Proyectos',
+                headerStyle: {
+                  backgroundColor: '#28303b',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                },
+              }}
+            />
+            <Stack.Screen
+              name="nuevo-proyecto"
+              component={NuevoProyecto}
+              options={{
+                title: 'Nuevo Proyecto',
+                headerStyle: {
+                  backgroundColor: '#28303b',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                },
+              }}
+            />
+            <Stack.Screen
+              name="proyecto"
+              component={Proyecto}
+              options={({route}) => ({
+                title: route.params.nombre,
+                headerStyle: {
+                  backgroundColor: '#28303b',
+                },
+                headerTintColor: '#fff',
+                headerTitleStyle: {
+                  fontWeight: 'bold',
+                },
+              })}
             />
           </Stack.Navigator>
         </NavigationContainer>

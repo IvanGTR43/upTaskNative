@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, Keyboard} from 'react-native';
 import {
-  Container,
   Button,
   Text,
   Heading,
@@ -11,6 +10,7 @@ import {
   Input,
   Center,
 } from 'native-base';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {gql, useMutation} from '@apollo/client';
 
@@ -26,10 +26,10 @@ const AUTENTICAR_CUENTA = gql`
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
-  //Apollo
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  //Apollo
   const [autenticarUsuario] = useMutation(AUTENTICAR_CUENTA);
 
   //navegacion
@@ -37,7 +37,8 @@ const Login = () => {
 
   const toast = useToast();
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    Keyboard.dismiss();
     setLoading(true);
 
     // validar
@@ -60,30 +61,26 @@ const Login = () => {
     }
 
     //intentar logear
-    autenticarUsuario({
-      variables: {
-        input: {
-          email,
-          password,
+    try {
+      const {data} = await autenticarUsuario({
+        variables: {
+          input: {
+            email,
+            password,
+          },
         },
-      },
-    })
-      .then(result => {
-        console.log(result);
-
-        toast.show({
-          description: result.data,
-        });
-        setLoading(false);
-      })
-      .catch(err => {
-        console.log(err);
-        setLoading(false);
-        toast.show({
-          description: err.message.replace('GraphQL error:', ''),
-          status: 'error',
-        });
       });
+      const {token} = data.autenticarUsuario;
+      await AsyncStorage.setItem('token', token);
+      navigation.navigate('proyectos');
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+      toast.show({
+        description: err.message.replace('GraphQL error:', ''),
+      });
+    }
   };
 
   return (
@@ -97,9 +94,10 @@ const Login = () => {
             <Stack alignItems="center">
               <FormControl.Label>Correo</FormControl.Label>
               <Input
+                keyboardType="email-address"
                 placeholder="Email"
                 variant="underlined"
-                onChangeText={text => setEmail(text)}
+                onChangeText={text => setEmail(text.toLowerCase())}
                 width="100%"
                 mb={5}
                 backgroundColor="white"
