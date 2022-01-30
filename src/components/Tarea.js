@@ -1,5 +1,4 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Box, useToast, Text, HStack, Pressable, Center} from 'native-base';
 
@@ -33,5 +32,3 @@ const Tarea = ({item}) => {
 };
 
 export default Tarea;
-
-const styles = StyleSheet.create({});
