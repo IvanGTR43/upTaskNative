@@ -1,17 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, View, Keyboard} from 'react-native';
-import {
-  Button,
-  Text,
-  Heading,
-  FlatList,
-  Box,
-  Pressable,
-  Center,
-  Input,
-  useToast,
-  Spinner,
-} from 'native-base';
+import {Button, Heading, FlatList, Input, useToast, Spinner} from 'native-base';
 
 import {gql, useMutation, useQuery} from '@apollo/client';
 
@@ -53,10 +42,31 @@ const Proyecto = ({route}) => {
       },
     },
   });
-  console.log(data);
 
   // Apollo agregar tareas
-  const [nuevaTarea] = useMutation(NUEVA_TAREA);
+  const [nuevaTarea] = useMutation(NUEVA_TAREA, {
+    update(cache, {data: {nuevaTarea}}) {
+      const {obtenerTareas} = cache.readQuery({
+        query: OBTENER_TAREAS,
+        variables: {
+          input: {
+            proyecto: id,
+          },
+        },
+      });
+      cache.writeQuery({
+        query: OBTENER_TAREAS,
+        variables: {
+          input: {
+            proyecto: id,
+          },
+        },
+        data: {
+          obtenerTareas: [...obtenerTareas, nuevaTarea],
+        },
+      });
+    },
+  });
 
   const toast = useToast();
 
@@ -75,7 +85,7 @@ const Proyecto = ({route}) => {
 
     try {
       // agregar Proyecto a la bd
-      const {data} = await nuevaTarea({
+      await nuevaTarea({
         variables: {
           input: {
             nombre,
@@ -90,6 +100,7 @@ const Proyecto = ({route}) => {
       setIsLoading(false);
       setNombre('');
     } catch (error) {
+      console.log(error);
       toast.show({
         description: error.message.replace('GraphQL error:', ''),
         status: 'error',
@@ -130,7 +141,8 @@ const Proyecto = ({route}) => {
       ) : (
         <FlatList
           data={data.obtenerTareas}
-          renderItem={({item}) => <Tarea item={item} />}
+          renderItem={({item}) => <Tarea item={item} idProyecto={id} />}
+          keyExtractor={item => item.id}
         />
       )}
     </View>

@@ -32,7 +32,6 @@ const Proyectos = () => {
   //Apollo
 
   const {data, loading, error} = useQuery(OBTENER_PROYECTOS);
-  console.log(data);
 
   return (
     <View style={{backgroundColor: '#e84347', flex: 1}}>
