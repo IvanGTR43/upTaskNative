@@ -1,3 +1,4 @@
 # Up Task Native
 
-Para un funcionamiento correcto se debera tener el servidor corriendo en una red Local o en su defecto migrar a la nube y cambiar la direccion dentro de la App
+Para un funcionamiento correcto se debera tener el servidor corriendo en una red Local
+La IP del Servidor debe de ser 192.168.1.105 y en el puerto: 4000

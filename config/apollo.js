@@ -3,10 +3,12 @@ import {setContext} from 'apollo-link-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createHttpLink} from 'apollo-link-http';
 
+// Todavia no funciona con Heroku :(
 // https://uptask-server.herokuapp.com/  NO LOCAL http://192.168.1.105:4000/ LOCAL
-console.log(process.env.PORT);
+
+// En esta linea se cambia la IP ser server
 let URI = `https://uptask-server.herokuapp.com`;
-console.log(URI);
+
 const httpLink = createHttpLink({
   uri: URI,
 });
