@@ -70,12 +70,14 @@ const Login = () => {
           },
         },
       });
+
+      console.log(data.autenticarUsuario);
       const {token} = data.autenticarUsuario;
       await AsyncStorage.setItem('token', token);
       navigation.navigate('proyectos');
       setLoading(false);
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
       setLoading(false);
       toast.show({
         description: err.message.replace('GraphQL error:', ''),

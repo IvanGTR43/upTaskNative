@@ -4,10 +4,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createHttpLink} from 'apollo-link-http';
 
 // https://uptask-server.herokuapp.com/  NO LOCAL http://192.168.1.105:4000/ LOCAL
+console.log(process.env.PORT);
+let URI = `https://uptask-server.herokuapp.com`;
+console.log(URI);
 const httpLink = createHttpLink({
-  uri: 'https://uptask-server.herokuapp.com/',
+  uri: URI,
 });
 
+// uri: 'https://uptask-server.herokuapp.com',
 const authLink = setContext(async (_, {headers}) => {
   // leer el token
 
